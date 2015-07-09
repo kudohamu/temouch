@@ -11,12 +11,37 @@ main = do
   else do
     let filepath = head $ args
     homeDir <- getHomeDirectory
-    contents <-  getDirectoryContents $ homeDir ++ "/temouch/templates/" ++ (getFileExtension filepath)
+    let templatesDir = homeDir ++ "/temouch/templates/" ++ (getFileExtension filepath)
+    contents <-  getDirectoryContents templatesDir
     let filtedContents = getFiltedContents contents
-    mapM_ print filtedContents
-    print "which template do you want to use?..."
-    templateNo <- readLn
-    print $ filtedContents !! (templateNo - 1)
+    if length filtedContents == 0
+    then do
+      putStrLn "No match templates. So it was created as empty file."
+    else do
+      putStrLn "you can use those files as templates."
+      putStrLn ""
+      putStrLn "-----------------------------------------"
+      mapM_ print . map (\(num, file) -> show num ++ ": " ++ file) $ zip [1..] filtedContents
+      putStrLn "-----------------------------------------"
+      putStrLn ""
+      putStrLn "which template do you want to use? please choose number."
+      templateNo <- readLn
+      let (newDir, newFile) = splitFileName filepath
+      createDirectoryIfMissing True newDir
+      exist <- doesFileExist filepath
+      if exist
+      then do
+        putStrLn "file already exist! overwrite? [y|n]"
+        overwrite <- getChar
+        if overwrite == 'y'
+        then do
+          copyFile (templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)) filepath
+          putStrLn $ "Created " ++ newFile ++ " (using template '" ++ (filtedContents !! (templateNo - 1)) ++ "')."
+        else do
+          putStrLn "Stoped creating."
+      else do
+        copyFile (templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)) filepath
+        putStrLn $ "Created " ++ newFile ++ " (using template '" ++ (filtedContents !! (templateNo - 1)) ++ "')."
 
 {- 
  >> getFileExtension "abc"
