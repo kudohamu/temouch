@@ -16,29 +16,29 @@ main = do
     let filtedContents = getFiltedContents contents
     if length filtedContents == 0
     then do
-      putStrLn "No match templates. So it was created as empty file."
+      putStrLn "No templates match. So the file was created as an empty file."
     else do
-      putStrLn "you can use those files as templates."
+      putStrLn "You can use these files as template."
       putStrLn ""
       putStrLn "-----------------------------------------"
-      mapM_ print . map (\(num, file) -> show num ++ ": " ++ file) $ zip [1..] filtedContents
+      mapM_ putStrLn . map (\(num, file) -> show num ++ ": " ++ file) $ zip [1..] filtedContents
       putStrLn "-----------------------------------------"
       putStrLn ""
-      putStrLn "which template do you want to use? please choose number."
+      putStrLn "Which template do you want to use? Please choose number."
       templateNo <- readLn
       let (newDir, newFile) = splitFileName filepath
       createDirectoryIfMissing True newDir
       exist <- doesFileExist filepath
       if exist
       then do
-        putStrLn "file already exist! overwrite? [y|n]"
+        putStrLn "File already exist! Overwrite? [y|n]"
         overwrite <- getChar
         if overwrite == 'y'
         then do
           copyFile (templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)) filepath
           putStrLn $ "Created " ++ newFile ++ " (using template '" ++ (filtedContents !! (templateNo - 1)) ++ "')."
         else do
-          putStrLn "Stoped creating."
+          putStrLn "Stopped creating."
       else do
         copyFile (templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)) filepath
         putStrLn $ "Created " ++ newFile ++ " (using template '" ++ (filtedContents !! (templateNo - 1)) ++ "')."
