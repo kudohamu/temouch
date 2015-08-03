@@ -1,10 +1,17 @@
-import System.Environment
+module Temouch
+    ( 
+    temouch
+    , getFileExtension
+    , getFiltedContents
+    ) where
+
 import System.FilePath
+import System.Environment
 import System.Directory
+import System.IO
+import Data.String.Utils
 
-putUsage = putStrLn("Usage: temouch filepath")
-
-main = do
+temouch = do
   args <- getArgs
   if length args /= 1
   then putUsage
@@ -28,6 +35,7 @@ main = do
       templateNo <- readLn
       let (newDir, newFile) = splitFileName filepath
       createDirectoryIfMissing True newDir
+      let tempPath = templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)
       exist <- doesFileExist filepath
       if exist
       then do
@@ -35,13 +43,25 @@ main = do
         overwrite <- getChar
         if overwrite == 'y'
         then do
-          copyFile (templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)) filepath
-          putStrLn $ "Created " ++ newFile ++ " (using template '" ++ (filtedContents !! (templateNo - 1)) ++ "')."
+          createFile tempPath filepath
         else do
           putStrLn "Stopped creating."
       else do
-        copyFile (templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)) filepath
-        putStrLn $ "Created " ++ newFile ++ " (using template '" ++ (filtedContents !! (templateNo - 1)) ++ "')."
+        createFile tempPath filepath
+
+putUsage = putStrLn("Usage: temouch filepath")
+
+createFile :: String -> String -> IO ()
+createFile tempPath filePath = do
+  writeFile filePath ""
+  templateHandle <- openFile tempPath ReadMode
+  templateContents <- hGetContents templateHandle
+  newFileHandle <- openFile filePath AppendMode
+  mapM_ (\line -> hPutStrLn newFileHandle $ replace "!!!FILE_NAME!!!" (fst . splitExtension . snd $ splitFileName filePath) line) $ lines templateContents
+  hClose templateHandle 
+  hClose newFileHandle
+  putStrLn $ "Created " ++ filePath ++ " (using template '" ++ tempPath ++ "')."
+
 
 {- 
  >> getFileExtension "abc"
@@ -56,7 +76,6 @@ getFileExtension :: String -> String
 getFileExtension = tail . snd . splitExtension
 
 
-
 {-
  >> getFiltedContents ["hoge", ".", "huga", ".git"]
  >  ["hoge", "huga"]
@@ -66,7 +85,5 @@ getFileExtension = tail . snd . splitExtension
  >  []
 -}
 
-ignoreFiles = [".", "..", ".DS_Store", ".git", ".svn"]
-
 getFiltedContents :: [String] -> [String]
-getFiltedContents = filter (\file -> notElem file ignoreFiles)
+getFiltedContents = filter (\file -> notElem file [".", "..", ".DS_Store", ".git", ".svn"])
