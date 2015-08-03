@@ -28,15 +28,15 @@ temouch = do
       putStrLn "You can use these files as template."
       putStrLn ""
       putStrLn "-----------------------------------------"
-      mapM_ putStrLn . map (\(num, file) -> show num ++ ": " ++ file) $ zip [1..] filtedContents
+      mapM_ putStrLn . map (\(num, file) -> show num ++ ": " ++ file) $ (0, "no use") : zip [1..] filtedContents
       putStrLn "-----------------------------------------"
       putStrLn ""
       putStrLn "Which template do you want to use? Please choose number."
       templateNo <- readLn
       let (newDir, newFile) = splitFileName filepath
       createDirectoryIfMissing True newDir
-      let tempPath = templatesDir ++ "/" ++ filtedContents !! (templateNo - 1)
       exist <- doesFileExist filepath
+      let tempPath = if templateNo /= 0 then templatesDir ++ "/" ++ filtedContents !! (templateNo - 1) else ""
       if exist
       then do
         putStrLn "File already exist! Overwrite? [y|n]"
@@ -52,6 +52,9 @@ temouch = do
 putUsage = putStrLn("Usage: temouch filepath")
 
 createFile :: String -> String -> IO ()
+createFile "" filePath = do
+  writeFile filePath ""
+  putStrLn $ "Created " ++ filePath ++ " (no using template)."
 createFile tempPath filePath = do
   writeFile filePath ""
   templateHandle <- openFile tempPath ReadMode
