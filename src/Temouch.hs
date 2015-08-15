@@ -13,6 +13,8 @@ import Data.String.Utils
 
 import FileLib
 
+ignoreFile = [".", "..", ".DS_Store", ".git", ".svn"]
+
 temouch = do
   args <- getArgs
   if length args /= 1
@@ -22,7 +24,7 @@ temouch = do
     homeDir <- getHomeDirectory
     let templatesDir = homeDir ++ "/temouch/templates/" ++ (getFileExtension filepath)
     contents <-  getDirectoryContents templatesDir
-    let filtedContents = getFiltedContents contents
+    let filtedContents = getFiltedContents ignoreFile contents
     if length filtedContents == 0
     then do
       putStrLn "No templates match. So the file was created as an empty file."
