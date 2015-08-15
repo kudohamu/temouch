@@ -4,8 +4,8 @@ import System.FilePath
 
 type FileName = String
 
-getFileExtension :: FileName -> String
-getFileExtension = tail . snd . splitExtension
+fileExtension :: FileName -> String
+fileExtension = tail . snd . splitExtension
 
 exchangeFileExtension :: String -> FileName -> FileName
 exchangeFileExtension filepath ext = (fst $ splitExtension filepath) ++ ext

@@ -1,7 +1,6 @@
 module Temouch
     ( 
     temouch
-    , getFileExtension
     , getFiltedContents
     ) where
 
@@ -22,7 +21,7 @@ temouch = do
   else do
     let filepath = head $ args
     homeDir <- getHomeDirectory
-    let templatesDir = homeDir ++ "/temouch/templates/" ++ (getFileExtension filepath)
+    let templatesDir = homeDir ++ "/temouch/templates/" ++ (fileExtension filepath)
     contents <-  getDirectoryContents templatesDir
     let filtedContents = getFiltedContents ignoreFile contents
     if length filtedContents == 0
