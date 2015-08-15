@@ -2,11 +2,13 @@ module FileLib where
 
 import System.FilePath
 
-getFileExtension :: String -> String
+type FileName = String
+
+getFileExtension :: FileName -> String
 getFileExtension = tail . snd . splitExtension
 
-exchangeFileExtension :: String -> String -> String
+exchangeFileExtension :: String -> FileName -> FileName
 exchangeFileExtension filepath ext = (fst $ splitExtension filepath) ++ ext
 
-getFiltedContents :: [String] -> [String] -> [String]
+getFiltedContents :: [String] -> [FileName] -> [FileName]
 getFiltedContents filterList = filter (\file -> notElem file filterList)
