@@ -66,27 +66,9 @@ createFile tempPath filePath = do
   putStrLn $ "Created " ++ filePath ++ " (using template '" ++ tempPath ++ "')."
 
 
-{- 
- >> getFileExtension "abc"
- >  ""
- >> getFileExtension "abc.txt"
- >  "txt"
- >> getFileExtension "abc.txt.exe"
- >  "exe"
- -}
-
 getFileExtension :: String -> String
 getFileExtension = tail . snd . splitExtension
 
-
-{-
- >> getFiltedContents ["hoge", ".", "huga", ".git"]
- >  ["hoge", "huga"]
- >> getFiltedContents ["hoge", "huga"]
- >  ["hoge", "huga"]
- >> getFiltedContents [".DS_Store", ".svn"]
- >  []
--}
 
 getFiltedContents :: [String] -> [String]
 getFiltedContents = filter (\file -> notElem file [".", "..", ".DS_Store", ".git", ".svn"])
