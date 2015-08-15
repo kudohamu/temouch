@@ -11,6 +11,8 @@ import System.Directory
 import System.IO
 import Data.String.Utils
 
+import FileLib
+
 temouch = do
   args <- getArgs
   if length args /= 1
