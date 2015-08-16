@@ -1,4 +1,7 @@
 import Test.Hspec
 
-main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+import FileLibSpec
+
+main :: IO()
+main = hspec $ do
+  fileLibSpec
