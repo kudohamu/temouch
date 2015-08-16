@@ -16,6 +16,7 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Temouch
+                     , FileLib
   build-depends:       base >= 4.7 && < 5
                      , filepath
                      , directory
@@ -37,6 +38,7 @@ test-suite temouch-test
   build-depends:       base
                      , temouch
                      , filepath
+                     , hspec
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 
