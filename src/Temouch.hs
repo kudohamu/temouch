@@ -1,7 +1,6 @@
 module Temouch
     ( 
     temouch
-    , getFiltedContents
     ) where
 
 import System.FilePath
@@ -23,7 +22,7 @@ temouch = do
     homeDir <- getHomeDirectory
     let templatesDir = homeDir ++ "/temouch/templates/" ++ (fileExtension filepath)
     contents <-  getDirectoryContents templatesDir
-    let filtedContents = getFiltedContents ignoreFile contents
+    let filtedContents = filterFiles ignoreFile contents
     if length filtedContents == 0
     then do
       putStrLn "No templates match. So the file was created as an empty file."
