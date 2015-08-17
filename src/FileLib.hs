@@ -1,6 +1,7 @@
 module FileLib where
 
 import System.FilePath
+import Data.String.Utils
 
 type FileName = String
 
@@ -15,3 +16,5 @@ exchangeFileExtension ext filepath = (fst $ splitExtension filepath) ++ '.' : ex
 filterFiles :: [String] -> [FileName] -> [FileName]
 filterFiles filterList = filter (\file -> notElem file filterList)
 
+subs :: String -> [(String, String)] -> String
+subs = foldr (\(prev, next) str -> replace prev next str)
