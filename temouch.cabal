@@ -21,6 +21,7 @@ library
                      , filepath
                      , directory
                      , MissingH
+                     , unix
   default-language:    Haskell2010
 
 executable temouch
