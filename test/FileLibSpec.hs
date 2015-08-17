@@ -19,8 +19,10 @@ fileLibSpec = do
         exchangeFileExtension "zip" "foo/bar/baz.tar" `shouldBe` "foo/bar/baz.zip"
       it "連続した拡張子のとき最後の拡張子を交換すること" $ do
         exchangeFileExtension "xz" "foo/bar/baz.tar.gz" `shouldBe` "foo/bar/baz.tar.xz"
-      it "拡張子がないとき拡張子を追加だけすること" $ do
+      it "パスの拡張子がないとき拡張子を追加だけすること" $ do
         exchangeFileExtension "rar" "foo/bar/baz" `shouldBe` "foo/bar/baz.rar"
+      it "交換する拡張子が空のとき拡張子がなくなること" $ do
+        exchangeFileExtension "" "foo/bar/baz.zip" `shouldBe` "foo/bar/baz"
     describe "filterFilesについて" $ do
       it "filterListに含まれるものが除去されること" $ do
         filterFiles ["hoge", "huga"] ["foo", "hoge", "bar", "huga", "baz"] `shouldBe` ["foo", "bar", "baz"]
