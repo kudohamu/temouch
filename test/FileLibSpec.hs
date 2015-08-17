@@ -26,3 +26,12 @@ fileLibSpec = do
         filterFiles ["hoge", "huga"] ["foo", "hoge", "bar", "huga", "baz"] `shouldBe` ["foo", "bar", "baz"]
       it "filterListが空のとき除去されるものが無いこと" $ do
         filterFiles [] ["foo", "bar", "baz"] `shouldBe` ["foo", "bar", "baz"]
+    describe "subsについて" $ do
+      it "置換ペアが1つのとき置換されること" $ do
+        subs "qwertyfoo\nasdfoogh" [("foo", "hoge")] `shouldBe` "qwertyhoge\nasdhogegh"
+      it "置換ペアが複数あるとき置換されること" $ do
+        subs "barqwerty foo gvcee baz" [("foo", "hoge"), ("bar", "huga"), ("baz", "hage")] `shouldBe` "hugaqwerty hoge gvcee hage"
+      it "置換ペアがないとき置換されないこと" $ do
+        subs "qwerty" [] `shouldBe` "qwerty"
+      it "置換ペアが同じのとき停止すること" $ do
+        subs " bar foo bar " [("foo", "foo"), ("bar", "foo"), ("foo", "foo")] `shouldBe` " foo foo foo "
